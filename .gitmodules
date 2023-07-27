@@ -1,0 +1,6 @@
+[submodule "technical-test-backend"]
+	path = technical-test-backend
+	url = ./technical-test-backend
+[submodule "technical-test-frontend"]
+	path = technical-test-frontend
+	url = ./technical-test-frontend
