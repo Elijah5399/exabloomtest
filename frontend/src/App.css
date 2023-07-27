@@ -1,0 +1,69 @@
+/* styles for login page */
+.loginWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.loginTitle {
+  font-family: "Raleway", sans-serif;
+  font-weight: 300;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.loginForm {
+  border: 1px solid black;
+  padding: 15px 30px;
+  border-radius: 1rem;
+  margin: 0 auto;
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+}
+
+.entryFieldWrapper {
+  padding: 5px 0;
+}
+
+.profileIcon {
+  width: 150px;
+  height: 120px;
+  align-self: center;
+}
+
+.loginLabel {
+  font-family: "Raleway", sans-serif;
+  font-weight: 400;
+  display: block;
+  text-align: start;
+  font-size: 11px;
+}
+
+.submitButton {
+  margin-top: 5px;
+  align-self: center;
+  text-align: center;
+  height: 30px;
+  width: 80px;
+  font-family: "Raleway", sans-serif;
+  border-radius: 10px;
+  background-color: lightskyblue;
+}
+.submitButton:hover {
+  cursor: pointer;
+}
+
+#password,
+#username {
+  border: 1px solid black;
+  border-radius: 10px;
+  height: 30px;
+}
+
+#password:focus,
+#username:focus {
+  border-color: lightblue;
+}

@@ -1,7 +1,8 @@
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Worksheets from "./Worksheets";
 import "./App.css";
 import { WSType } from "./types/types";
+import profileLogo from "./images/user_profile.png";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -64,27 +65,35 @@ const App = () => {
 
   if (!isLoggedIn)
     return (
-      <Fragment>
-        <form>
-          <label htmlFor="username">Username</label>
-          <input
-            id="username"
-            type="text"
-            placeholder="Type username here"
-            onChange={handleUsernameOnChange}
-          />
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            placeholder="Type password here"
-            onChange={handlePasswordOnChange}
-          />
-          <button type="button" onClick={handleLoginSubmitButtonOnClick}>
+      <div className="loginWrapper">
+        <form className="loginForm">
+          <img src={profileLogo} alt="Profile" className="profileIcon" />
+          <h3 className="loginTitle">Log in</h3>
+          <div className="entryFieldWrapper">
+            <input
+              id="username"
+              type="text"
+              placeholder="Username"
+              onChange={handleUsernameOnChange}
+            />
+          </div>
+          <div className="entryFieldWrapper">
+            <input
+              id="password"
+              type="password"
+              placeholder="Password"
+              onChange={handlePasswordOnChange}
+            />
+          </div>
+          <button
+            type="button"
+            onClick={handleLoginSubmitButtonOnClick}
+            className="submitButton"
+          >
             Submit
           </button>
         </form>
-      </Fragment>
+      </div>
     );
   else return <Worksheets worksheets={worksheets} />;
 };
