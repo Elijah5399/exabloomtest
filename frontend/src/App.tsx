@@ -1,5 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
+import Worksheets from "./Worksheets";
 import "./App.css";
+import { WSType } from "./types/types";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -8,9 +10,7 @@ const App = () => {
     password: "",
   });
   //worksheets is an array of objects
-  const [worksheets, setWorksheets] = useState<
-    { title: string; description: string; price: number; cost: number }[]
-  >([]);
+  const [worksheets, setWorksheets] = useState<WSType[]>([]);
 
   const handleUsernameOnChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setLoginCredentials({
@@ -27,17 +27,23 @@ const App = () => {
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.preventDefault();
-    fetch(`${process.env.REACT_APP_API_URL}/sessions`, {
-      method: "POST",
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "same-origin",
-      headers: { "Content-Type": "application/json" },
-      referrerPolicy: "no-referrer",
-      body: JSON.stringify({ user: loginCredentials }),
-    })
-      .then((response) => response.json())
-      .then((data) => setIsLoggedIn(data.logged_in));
+    try {
+      fetch(`${process.env.REACT_APP_API_URL}/sessions`, {
+        method: "POST",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        referrerPolicy: "no-referrer",
+        body: JSON.stringify({ user: loginCredentials }),
+      })
+        .then((response) => response.json())
+        .then((data) => setIsLoggedIn(data.logged_in));
+    } catch (e: any) {
+      let message = "Unknown error";
+      if (e instanceof Error) message = e.message;
+      console.error(message);
+    }
   };
 
   useEffect(() => {
@@ -80,64 +86,7 @@ const App = () => {
         </form>
       </Fragment>
     );
-  else
-    return (
-      <Fragment>
-        <p>
-          Total Cost: $
-          {worksheets
-            .reduce(
-              (accumulator, { cost }) => accumulator + parseFloat(cost as any),
-              0
-            )
-            .toFixed(2)}
-        </p>
-        <p>
-          Total Price: $
-          {worksheets
-            .reduce(
-              (accumulator, { price }) =>
-                accumulator + parseFloat(price as any),
-              0
-            )
-            .toFixed(2)}
-        </p>
-        <p>
-          Total Profits: $
-          {worksheets
-            .reduce(
-              (accumulator, { cost, price }) =>
-                accumulator +
-                (parseFloat(price as any) - parseFloat(cost as any)),
-              0
-            )
-            .toFixed(2)}
-        </p>
-        <table>
-          <thead>
-            <tr>
-              <td>#</td>
-              <td>Title</td>
-              <td>Description</td>
-              <td>Cost ($)</td>
-              <td>Price ($)</td>
-              <td>Profit ($)</td>
-            </tr>
-          </thead>
-          <tbody>
-            {worksheets.map(({ title, description, cost, price }, index) => (
-              <tr>
-                <td>{index + 1}</td>
-                <td>{title}</td>
-                <td>{description}</td>
-                <td>{cost}</td>
-                <td>{price}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </Fragment>
-    );
+  else return <Worksheets worksheets={worksheets} />;
 };
 
 export default App;
