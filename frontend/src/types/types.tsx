@@ -8,5 +8,4 @@ export type WSType = {
   description: string;
   price: number;
   cost: number;
-  questions: QType[];
 };

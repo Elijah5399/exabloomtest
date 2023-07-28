@@ -4,13 +4,17 @@ Contains frontend and backend for exabloom technical test
 
 DONE:
 
+- [x] Addition of worksheet component, and each worksheet is given its own URL (compulsory)
+
+- [x] Addition of questions in frontend, and implemented a method for fetching questions for backend (compulsory)
+
+- [x] Add migration and seed files for questions (compulsory)
+
+- [x] Prettify the worksheets page a bit (optional)
+
 - [x] Prettify the login page a bit (optional)
 
 - [x] Integrate React Router (optional)
-
-- [x] Addition of worksheet component, and each worksheet is given its own URL (compulsory)
-
-- [x] Addition of questions in frontend (compulsory)
 
 TODO:
 

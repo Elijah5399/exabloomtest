@@ -5,13 +5,14 @@ import { WSType } from "./types/types";
 import profileLogo from "./images/user_profile.png";
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [loginCredentials, setLoginCredentials] = useState({
     username: "",
     password: "",
   });
   //worksheets is an array of objects
   const [worksheets, setWorksheets] = useState<WSType[]>([]);
+  const [failedLogin, setFailedLogin] = useState<boolean>(false);
 
   const handleUsernameOnChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setLoginCredentials({
@@ -23,6 +24,7 @@ const App = () => {
       ...loginCredentials,
       password: event.currentTarget.value,
     });
+
   //checking database to see if
   const handleLoginSubmitButtonOnClick = (
     event: React.MouseEvent<HTMLButtonElement>
@@ -39,7 +41,9 @@ const App = () => {
         body: JSON.stringify({ user: loginCredentials }),
       })
         .then((response) => response.json())
-        .then((data) => setIsLoggedIn(data.logged_in));
+        .then((data) => {
+          data.logged_in ? setIsLoggedIn(data.logged_in) : setFailedLogin(true);
+        });
     } catch (e: any) {
       let message = "Unknown error";
       if (e instanceof Error) message = e.message;
@@ -63,7 +67,7 @@ const App = () => {
     }
   }, [isLoggedIn, loginCredentials]);
 
-  if (!isLoggedIn)
+  if (!isLoggedIn) {
     return (
       <div className="loginWrapper">
         <form className="loginForm">
@@ -92,10 +96,19 @@ const App = () => {
           >
             Submit
           </button>
+          {failedLogin ? (
+            <div className="failedLoginContainer">
+              <p>Wrong credentials.</p>
+            </div>
+          ) : (
+            <></>
+          )}
         </form>
       </div>
     );
-  else return <Worksheets worksheets={worksheets} />;
+  } else {
+    return <Worksheets worksheets={worksheets} />;
+  }
 };
 
 export default App;

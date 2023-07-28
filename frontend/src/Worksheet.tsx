@@ -1,5 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { QType } from "./types/types";
+import { useState, useEffect } from "react";
+
 export default function Worksheet(): JSX.Element {
   // Obtain the parameters from the query string and initialise them
   const [searchParams] = useSearchParams();
@@ -8,14 +10,43 @@ export default function Worksheet(): JSX.Element {
   var title: string | null = searchParams.get("title");
   if (title !== null) title = decodeURIComponent(title);
   var price: number | null = Number(searchParams.get("price"));
-  var index: number | null = Number(searchParams.get("index"));
+  var index: number = Number(searchParams.get("index"));
   var cost: number | null = Number(searchParams.get("cost"));
-  var questionsString: string | null = searchParams.get("questions");
-  var questionsArr: QType[] = [];
-  if (questionsString !== null) {
-    questionsString = decodeURIComponent(questionsString);
-    questionsArr = JSON.parse(questionsString);
-  }
+  const [questions, setQuestions] = useState([]);
+  const fetchQuestionsForWorksheet = (worksheetId: number) => {
+    fetch(
+      `${process.env.REACT_APP_API_URL}/worksheets/${worksheetId}/questions`,
+      {
+        method: "POST",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        referrerPolicy: "no-referrer",
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Fetching questions failed.");
+        }
+      })
+      .then((data) => {
+        // 'data.questions' contains the questions for the worksheet
+        console.log(data.questions);
+        setQuestions(data.questions);
+        // Set the questions state in your component or use it as needed
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  };
+
+  useEffect(
+    () => fetchQuestionsForWorksheet(index),
+    [fetchQuestionsForWorksheet]
+  );
 
   return (
     <>
@@ -34,12 +65,19 @@ export default function Worksheet(): JSX.Element {
           </tr>
         </thead>
         <tbody>
-          {questionsArr.map((qn: QType, qnIndex: number) => (
-            <tr>
+          {questions.map((qn: QType, qnIndex: number) => (
+            <tr key={qnIndex}>
               <td>{qnIndex + 1}</td>
               <td>{qn.description}</td>
               <td>{qn.answer}</td>
-              <td>qn.cost</td>
+              <td>
+                $
+                {typeof qn.cost === "number"
+                  ? qn.cost.toFixed(2)
+                  : typeof qn.cost === "string"
+                  ? parseFloat(qn.cost).toFixed(2)
+                  : "Invalid cost"}
+              </td>
             </tr>
           ))}
         </tbody>

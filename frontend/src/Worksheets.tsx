@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { WSType } from "./types/types";
+import "./Worksheets.css";
 
 export default function Worksheets({
   worksheets,
@@ -8,8 +9,8 @@ export default function Worksheets({
   worksheets: WSType[];
 }): JSX.Element {
   return (
-    <Fragment>
-      <p>
+    <div className="worksheetsWrapper">
+      <p className="worksheetLine">
         Total Cost: $
         {worksheets
           .reduce(
@@ -18,7 +19,7 @@ export default function Worksheets({
           )
           .toFixed(2)}
       </p>
-      <p>
+      <p className="worksheetLine">
         Total Price: $
         {worksheets
           .reduce(
@@ -27,7 +28,7 @@ export default function Worksheets({
           )
           .toFixed(2)}
       </p>
-      <p>
+      <p className="worksheetLine">
         Total Profits: $
         {worksheets
           .reduce(
@@ -38,7 +39,7 @@ export default function Worksheets({
           )
           .toFixed(2)}
       </p>
-      <table>
+      <table className="worksheetsTable">
         <thead>
           <tr>
             <td>#</td>
@@ -51,32 +52,28 @@ export default function Worksheets({
           </tr>
         </thead>
         <tbody>
-          {worksheets.map(
-            ({ title, description, cost, price, questions }, index) => (
-              <tr>
-                <td>{index + 1}</td>
-                <td>{title}</td>
-                <td>{description}</td>
-                <td>{cost}</td>
-                <td>{price}</td>
-                <td>{price - cost}</td>
-                <td>
-                  <Link
-                    to={encodeURI(
-                      `/worksheet?index=${index}&title=${title}&desc=${description}&cost=${cost}&price=${price}&questions=${JSON.stringify(
-                        questions
-                      )}`
-                    )}
-                    target="_blank"
-                  >
-                    Worksheet {index + 1}
-                  </Link>
-                </td>
-              </tr>
-            )
-          )}
+          {worksheets.map(({ title, description, cost, price }, index) => (
+            <tr>
+              <td>{index + 1}</td>
+              <td>{title}</td>
+              <td>{description}</td>
+              <td>{cost}</td>
+              <td>{price}</td>
+              <td>{price - cost}</td>
+              <td>
+                <Link
+                  to={encodeURI(
+                    `/worksheet?index=${index}&title=${title}&desc=${description}&cost=${cost}&price=${price}`
+                  )}
+                  target="_blank"
+                >
+                  Worksheet {index + 1}
+                </Link>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
-    </Fragment>
+    </div>
   );
 }
